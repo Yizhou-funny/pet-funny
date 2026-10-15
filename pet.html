@@ -9,9 +9,9 @@
 body{background:#f3f4f6;max-width:480px;margin:0 auto;min-height:100vh}
 .langfix{position:fixed;top:10px;right:10px;z-index:9;background:rgba(255,255,255,.95);border:1px solid #e5e7eb;border-radius:10px;padding:5px 8px;font-size:13px;color:#1f2937;cursor:pointer;font-weight:600}
 .head{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;text-align:center;padding:28px 18px 46px}
-.ava{width:84px;height:84px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:42px;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.85)}
-.name{font-size:24px;font-weight:700;word-break:break-word}
-.breed{font-size:14px;opacity:.88;margin-top:3px;word-break:break-word}
+.ava{width:112px;height:112px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:58px;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.85)}
+.name{font-size:27px;font-weight:700;word-break:break-word}
+.breed{display:inline-block;margin-top:10px;padding:6px 16px;background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.55);border-radius:999px;font-size:16px;font-weight:600;opacity:1;word-break:break-word}
 .body{padding:0 14px;margin-top:-26px;padding-bottom:20px}
 .btn{display:block;width:100%;padding:15px;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;margin-bottom:12px}
 .call{background:#16a34a;color:#fff}
@@ -105,7 +105,7 @@ function render(){
    +'<div class="name">'+esc(d.n)+'</div>'
    +'<div class="breed">'+esc(d.b||'')+'</div></div>'
    +'<div class="body">'
-   +'<a class="btn call" href="tel:'+tel+'">'+t.call+(d.t?' · '+esc(d.t):'')+'</a>'
+   +(d.p?'<a class="btn call" href="tel:'+tel+'">'+t.call+(d.t?' · '+esc(d.t):'')+'</a>':'')
    +(d.w?'<a class="btn call" style="background:#22c55e" href="https://wa.me/'+waNum+'">'+t.wa+'</a>':'')
    +(d.tg?'<a class="btn call" style="background:#229ed9" href="https://t.me/'+tgUser+'">'+t.tg+'</a>':'')
    +(rows?'<div class="card"><h3>'+t.info+'</h3>'+rows+'</div>':'')
