@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet ID</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,sans-serif}
+body{background:#f3f4f6;max-width:480px;margin:0 auto;min-height:100vh}
+.langfix{position:fixed;top:10px;right:10px;z-index:9;background:rgba(255,255,255,.95);border:1px solid #e5e7eb;border-radius:10px;padding:5px 8px;font-size:13px;color:#1f2937;cursor:pointer;font-weight:600}
+.head{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;text-align:center;padding:28px 18px 46px}
+.ava{width:84px;height:84px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:42px;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.85)}
+.name{font-size:24px;font-weight:700;word-break:break-word}
+.breed{font-size:14px;opacity:.88;margin-top:3px;word-break:break-word}
+.body{padding:0 14px;margin-top:-26px;padding-bottom:20px}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;margin-bottom:12px}
+.call{background:#16a34a;color:#fff}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:15px;margin-bottom:12px}
+.card h3{font-size:14px;margin-bottom:9px;color:#111827}
+.kv{display:flex;justify-content:space-between;font-size:14px;padding:5px 0;color:#6b7280;gap:12px}
+.kv b{color:#1f2937;font-weight:500;text-align:right;word-break:break-word}
+.found{background:#fef9c3;border-radius:14px;padding:14px;text-align:center;font-size:14px;color:#92400e;line-height:1.6}
+.foot{text-align:center;font-size:12px;color:#9ca3af;padding:8px 0 20px}
+.foot a{color:#2563eb;text-decoration:none}
+.err{text-align:center;padding:60px 20px;color:#6b7280;font-size:15px;line-height:1.8}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+function dec(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';
+  const bin=atob(s),b=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(b)}
+
+/* ===== 11 语言 UI 文案（宠物资料由主人填写，不做翻译）===== */
+const L={
+ru:{n:'Русский',call:'📞 Связаться с хозяином',wa:'💬 Написать в WhatsApp',tg:'✈️ Написать в Telegram',
+    info:'📋 Информация о питомце',found1:'🐾 <b>Вы нашли это животное?</b>',
+    found2:'Позвоните хозяину по кнопке выше —<br>вам обещано вознаграждение!',
+    foot:'Сделано с ❤ · ',shop:'Наш магазин',err:'⚠️ Страница не найдена.<br>Обратитесь к владельцу адресника.'},
+en:{n:'English',call:'📞 Contact the owner',wa:'💬 Message on WhatsApp',tg:'✈️ Message on Telegram',
+    info:'📋 Pet information',found1:'🐾 <b>Did you find this animal?</b>',
+    found2:'Tap the button above to contact the owner —<br>a reward is promised!',
+    foot:'Made with ❤ · ',shop:'Our store',err:'⚠️ Page not found.'},
+zh:{n:'中文',call:'📞 联系主人',wa:'💬 WhatsApp 联系',tg:'✈️ Telegram 联系',
+    info:'📋 宠物信息',found1:'🐾 <b>您捡到了这只宠物？</b>',
+    found2:'点击上方按钮联系主人——<br>有酬谢！',
+    foot:'用 ❤ 制作 · ',shop:'我们的店铺',err:'⚠️ 页面不存在。'},
+de:{n:'Deutsch',call:'📞 Besitzer kontaktieren',wa:'💬 WhatsApp Nachricht',tg:'✈️ Telegram Nachricht',
+    info:'📋 Informationen zum Tier',found1:'🐾 <b>Haben Sie dieses Tier gefunden?</b>',
+    found2:'Kontaktieren Sie den Besitzer über den Button —<br>es winkt eine Belohnung!',
+    foot:'Mit ❤ gemacht · ',shop:'Unser Shop',err:'⚠️ Seite nicht gefunden.'},
+es:{n:'Español',call:'📞 Contactar al dueño',wa:'💬 Escribir por WhatsApp',tg:'✈️ Escribir por Telegram',
+    info:'📋 Información de la mascota',found1:'🐾 <b>¿Has encontrado esta mascota?</b>',
+    found2:'Contacta al dueño con el botón de arriba —<br>¡hay recompensa!',
+    foot:'Hecho con ❤ · ',shop:'Nuestra tienda',err:'⚠️ Página no encontrada.'},
+fr:{n:'Français',call:'📞 Contacter le propriétaire',wa:'💬 Écrire sur WhatsApp',tg:'✈️ Écrire sur Telegram',
+    info:'📋 Informations sur l’animal',found1:'🐾 <b>Vous avez trouvé cet animal ?</b>',
+    found2:'Contactez le propriétaire avec le bouton ci-dessus —<br>une récompense vous attend !',
+    foot:'Fait avec ❤ · ',shop:'Notre boutique',err:'⚠️ Page introuvable.'},
+it:{n:'Italiano',call:'📞 Contatta il proprietario',wa:'💬 Scrivi su WhatsApp',tg:'✈️ Scrivi su Telegram',
+    info:'📋 Informazioni sull’animale',found1:'🐾 <b>Hai trovato questo animale?</b>',
+    found2:'Contatta il proprietario con il pulsante qui sopra —<br>c’è una ricompensa!',
+    foot:'Fatto con ❤ · ',shop:'Il nostro negozio',err:'⚠️ Pagina non trovata.'},
+pt:{n:'Português',call:'📞 Contactar o dono',wa:'💬 Escrever no WhatsApp',tg:'✈️ Escrever no Telegram',
+    info:'📋 Informação do animal',found1:'🐾 <b>Encontrou este animal?</b>',
+    found2:'Contacte o dono através do botão acima —<br>há recompensa prometida!',
+    foot:'Feito com ❤ · ',shop:'A nossa loja',err:'⚠️ Página não encontrada.'},
+pl:{n:'Polski',call:'📞 Skontaktuj się z właścicielem',wa:'💬 Napisz na WhatsApp',tg:'✈️ Napisz na Telegram',
+    info:'📋 Informacje o zwierzęciu',found1:'🐾 <b>Znalazłeś to zwierzę?</b>',
+    found2:'Skontaktuj się z właścicielem przyciskiem powyżej —<br>obiecana jest nagroda!',
+    foot:'Zrobione z ❤ · ',shop:'Nasz sklep',err:'⚠️ Nie znaleziono strony.'},
+uk:{n:'Українська',call:'📞 Зв’язатися з господарем',wa:'💬 Написати в WhatsApp',tg:'✈️ Написати в Telegram',
+    info:'📋 Інформація про тварину',found1:'🐾 <b>Ви знайшли цю тварину?</b>',
+    found2:'Зателефонуйте господарю кнопкою вище —<br>вам обіцяна винагорода!',
+    foot:'Зроблено з ❤ · ',shop:'Наш магазин',err:'⚠️ Сторінку не знайдено.'},
+ja:{n:'日本語',call:'📞 飼い主に連絡',wa:'💬 WhatsAppで送信',tg:'✈️ Telegramで送信',
+    info:'📋 ペット情報',found1:'🐾 <b>この動物を拾いましたか？</b>',
+    found2:'上のボタンで飼い主に連絡してください——<br>謝礼があります！',
+    foot:'❤をこめて · ',shop:'ストアへ',err:'⚠️ ページが見つかりません。'}
+};
+const LANGS=Object.keys(L);
+let cur=localStorage.getItem('plang');
+if(!cur||LANGS.indexOf(cur)<0){cur=(navigator.language||'ru').slice(0,2).toLowerCase();if(LANGS.indexOf(cur)<0)cur='ru'}
+
+let d=null;try{d=JSON.parse(dec(location.hash.slice(1)))}catch(e){}
+const app=document.getElementById('app');
+const T=()=>L[cur];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function setLang(v){cur=v;try{localStorage.setItem('plang',v)}catch(e){};render()}
+
+function render(){
+  const t=T();
+  const opts=LANGS.map(k=>'<option value="'+k+'"'+(k===cur?' selected':'')+'>'+L[k].n+'</option>').join('');
+  if(!d||!d.n){
+    app.innerHTML='<select class="langfix" onchange="setLang(this.value)">'+opts+'</select><div class="err">'+t.err+'</div>';return}
+  const tel=(d.p||'').replace(/[^\d+]/g,'');
+  const waNum=(d.w||'').replace(/[^\d]/g,'');
+  const tgUser=esc(String(d.tg||'').replace(/^@/,''));
+  const rows=(d.i||[]).map(x=>'<div class="kv"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></div>').join('');
+  app.innerHTML=
+   '<select class="langfix" onchange="setLang(this.value)">'+opts+'</select>'
+   +'<div class="head"><div class="ava">'+(d.e||'🐾')+'</div>'
+   +'<div class="name">'+esc(d.n)+'</div>'
+   +'<div class="breed">'+esc(d.b||'')+'</div></div>'
+   +'<div class="body">'
+   +'<a class="btn call" href="tel:'+tel+'">'+t.call+(d.t?' · '+esc(d.t):'')+'</a>'
+   +(d.w?'<a class="btn call" style="background:#22c55e" href="https://wa.me/'+waNum+'">'+t.wa+'</a>':'')
+   +(d.tg?'<a class="btn call" style="background:#229ed9" href="https://t.me/'+tgUser+'">'+t.tg+'</a>':'')
+   +(rows?'<div class="card"><h3>'+t.info+'</h3>'+rows+'</div>':'')
+   +'<div class="found">'+t.found1+'<br>'+t.found2+'</div>'
+   +'</div>'
+   +'<div class="foot">'+t.foot+'<a href="https://www.ozon.ru">'+t.shop+'</a></div>';
+}
+render();
+</script>
+</body>
+</html>
