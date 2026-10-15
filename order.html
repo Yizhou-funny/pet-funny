@@ -58,10 +58,7 @@ textarea{resize:vertical;min-height:56px}
 
 <div class="card out" id="out">
   <b style="font-size:16px" id="t_ready"></b>
-  <div class="qrwrap">
-    <img class="qr" id="qr" alt="QR">
-    <div class="info" id="t_engrave"></div>
-  </div>
+  <div style="text-align:center"><img class="qr" id="qr" alt="QR" style="margin:0 auto"></div>
   <div class="stepbox" id="t_steps"></div>
   <div class="urlbox" id="url"></div>
 </div>
@@ -72,70 +69,70 @@ textarea{resize:vertical;min-height:56px}
 <script>
 /* ===== 11 语言 ===== */
 const L={
-ru:{n:'Русский',title:'🐾 Профиль вашего питомца',sub:'Заполните форму — мы создадим персональный QR-код для адресника.<br>Данные обрабатываются только на вашем телефоне и никуда не отправляются.',
-    lname:'Кличка питомца *',lemo:'Иконка <small>(эмодзи, любое)</small>',lbreed:'Порода · возраст',lphone:'Ваш телефон * <small>(выгравируем на адреснике)</small>',
-    lwa:'WhatsApp <small>(если есть)</small>',ltg:'Telegram <small>(ник без @)</small>',linfo:'Информация о питомце <small>(каждая строка: название | значение)</small>',
-    btn:'Создать мой QR-код',ready:'✅ Ваш QR-код готов!',engrave:'На адреснике будет выгравировано:<br><b id="egr"></b>',
+ru:{n:'Русский',title:'🐾 Профиль вашего питомца',sub:'Заполните форму — мы создадим персональный QR-код для адресника.<br>Данные обрабатываются только на вашем телефоне и никуда не отправляются.<br>⭐ Только кличка обязательна — остальное по желанию.',
+    lname:'Кличка питомца *',lemo:'Иконка <small>(эмодзи, любое)</small>',lbreed:'Порода · возраст',lphone:'Ваш телефон <small>(необязательно)</small>',
+    lwa:'WhatsApp <small>(необязательно)</small>',ltg:'Telegram <small>(необязательно)</small>',linfo:'Информация о питомце <small>(необязательно)</small>',
+    req:'Укажите кличку и хотя бы один контакт: телефон, WhatsApp или Telegram',btn:'Создать мой QR-код',ready:'✅ Ваш QR-код готов!',
     steps:'📌 <b>Что делать дальше:</b><br>1️⃣ <b>Зажмите QR-код</b> → «Сохранить изображение»<br>2️⃣ Отправьте сохранённый QR-код <b>продавцу в чат Ozon</b><br>3️⃣ Готово! Мы выгравируем адресник и отправим заказ',
     info_def:'Окрас|\nПрививки|✓ актуальны\nХарактер|дружелюбный',ph_name:'Рекс',ph_breed:'Овчарка · 5 лет'},
-en:{n:'English',title:'🐾 Your Pet Profile',sub:'Fill in the form — we will create a personal QR code for the tag.<br>Data is processed only on your phone and never sent anywhere.',
-    lname:'Pet name *',lemo:'Icon <small>(any emoji)</small>',lbreed:'Breed · age',lphone:'Your phone * <small>(engraved on the tag)</small>',
-    lwa:'WhatsApp <small>(if any)</small>',ltg:'Telegram <small>(username without @)</small>',linfo:'Pet info <small>(each line: label | value)</small>',
-    btn:'Create my QR code',ready:'✅ Your QR code is ready!',engrave:'Will be engraved on the tag:<br><b id="egr"></b>',
+en:{n:'English',title:'🐾 Your Pet Profile',sub:'Fill in the form — we will create a personal QR code for the tag.<br>Data is processed only on your phone and never sent anywhere.<br>⭐ Only the pet name is required — everything else is optional.',
+    lname:'Pet name *',lemo:'Icon <small>(any emoji)</small>',lbreed:'Breed · age',lphone:'Your phone <small>(optional)</small>',
+    lwa:'WhatsApp <small>(optional)</small>',ltg:'Telegram <small>(optional)</small>',linfo:'Pet info <small>(optional)</small>',
+    req:'Please enter the pet name and at least one contact: phone, WhatsApp or Telegram',btn:'Create my QR code',ready:'✅ Your QR code is ready!',
     steps:'📌 <b>What to do next:</b><br>1️⃣ <b>Long-press the QR code</b> → "Save image"<br>2️⃣ Send the saved QR code <b>to the seller in Ozon chat</b><br>3️⃣ Done! We will engrave the tag and ship your order',
     info_def:'Color|\nVaccines|✓ up to date\nTemperament|friendly',ph_name:'Rex',ph_breed:'Shepherd · 5 years'},
-zh:{n:'中文',title:'🐾 您的宠物档案',sub:'填写表单——我们将为您的宠物牌生成专属二维码。<br>数据只在您的手机上处理，不会发送到任何地方。',
-    lname:'宠物名字 *',lemo:'图标 <small>(任意 emoji)</small>',lbreed:'品种 · 年龄',lphone:'您的电话 * <small>(刻在牌子上)</small>',
-    lwa:'WhatsApp <small>(如有)</small>',ltg:'Telegram <small>(用户名不带@)</small>',linfo:'宠物信息 <small>(每行格式：项目 | 内容)</small>',
-    btn:'生成我的二维码',ready:'✅ 您的二维码已生成！',engrave:'牌子上将刻有：<br><b id="egr"></b>',
+zh:{n:'中文',title:'🐾 您的宠物档案',sub:'填写表单——我们将为您的宠物牌生成专属二维码。<br>数据只在您的手机上处理，不会发送到任何地方。<br>⭐ 只需填写宠物名字，其他均为选填。',
+    lname:'宠物名字 *',lemo:'图标 <small>(任意 emoji)</small>',lbreed:'品种 · 年龄',lphone:'您的电话 <small>(选填)</small>',
+    lwa:'WhatsApp <small>(可填)</small>',ltg:'Telegram <small>(可填)</small>',linfo:'宠物信息 <small>(可填)</small>',
+    req:'请填写宠物名字，并至少留一种联系方式（电话 / WhatsApp / Telegram）',btn:'生成我的二维码',ready:'✅ 您的二维码已生成！',
     steps:'📌 <b>接下来：</b><br>1️⃣ <b>长按二维码</b> → "保存图片"<br>2️⃣ 把保存的二维码<b>通过 Ozon 聊天发给卖家</b><br>3️⃣ 完成！我们会刻好牌子并发出',
     info_def:'毛色|\n疫苗|✓ 已接种\n性格|温顺',ph_name:'Rex',ph_breed:'牧羊犬 · 5岁'},
-de:{n:'Deutsch',title:'🐾 Profil Ihres Haustiers',sub:'Füllen Sie das Formular aus – wir erstellen einen persönlichen QR-Code für das Halsband.<br>Die Daten werden nur auf Ihrem Telefon verarbeitet und nirgendwohin gesendet.',
-    lname:'Name des Haustiers *',lemo:'Symbol <small>(beliebiges Emoji)</small>',lbreed:'Rasse · Alter',lphone:'Ihre Telefonnummer * <small>(wird auf das Tag graviert)</small>',
-    lwa:'WhatsApp <small>(falls vorhanden)</small>',ltg:'Telegram <small>(Benutzername ohne @)</small>',linfo:'Infos zum Haustier <small>(pro Zeile: Bezeichnung | Wert)</small>',
-    btn:'Meinen QR-Code erstellen',ready:'✅ Ihr QR-Code ist fertig!',engrave:'Wird auf das Tag graviert:<br><b id="egr"></b>',
+de:{n:'Deutsch',title:'🐾 Profil Ihres Haustiers',sub:'Füllen Sie das Formular aus – wir erstellen einen persönlichen QR-Code für das Halsband.<br>Die Daten werden nur auf Ihrem Telefon verarbeitet und nirgendwohin gesendet.<br>⭐ Nur der Name ist Pflicht — alles andere ist freiwillig.',
+    lname:'Name des Haustiers *',lemo:'Symbol <small>(beliebiges Emoji)</small>',lbreed:'Rasse · Alter',lphone:'Ihre Telefonnummer <small>(optional)</small>',
+    lwa:'WhatsApp <small>(optional)</small>',ltg:'Telegram <small>(optional)</small>',linfo:'Infos zum Haustier <small>(optional)</small>',
+    req:'Bitte Name und mindestens eine Kontaktmöglichkeit angeben',btn:'Meinen QR-Code erstellen',ready:'✅ Ihr QR-Code ist fertig!',
     steps:'📌 <b>Nächste Schritte:</b><br>1️⃣ <b>QR-Code gedrückt halten</b> → „Bild speichern"<br>2️⃣ Den gespeicherten QR-Code <b>dem Verkäufer im Ozon-Chat senden</b><br>3️⃣ Fertig! Wir gravieren das Tag und versenden Ihre Bestellung',
     info_def:'Fellfarbe|\nImpfungen|✓ aktuell\nCharakter|freundlich',ph_name:'Rex',ph_breed:'Schäferhund · 5 Jahre'},
-es:{n:'Español',title:'🐾 Perfil de tu mascota',sub:'Rellena el formulario: crearemos un código QR personalizado para la placa.<br>Los datos se procesan solo en tu teléfono y no se envían a ningún sitio.',
-    lname:'Nombre de la mascota *',lemo:'Icono <small>(cualquier emoji)</small>',lbreed:'Raza · edad',lphone:'Tu teléfono * <small>(se grabará en la placa)</small>',
-    lwa:'WhatsApp <small>(si tienes)</small>',ltg:'Telegram <small>(usuario sin @)</small>',linfo:'Info de la mascota <small>(cada línea: etiqueta | valor)</small>',
-    btn:'Crear mi código QR',ready:'✅ ¡Tu código QR está listo!',engrave:'Se grabará en la placa:<br><b id="egr"></b>',
+es:{n:'Español',title:'🐾 Perfil de tu mascota',sub:'Rellena el formulario: crearemos un código QR personalizado para la placa.<br>Los datos se procesan solo en tu teléfono y no se envían a ningún sitio.<br>⭐ Solo el nombre es obligatorio — todo lo demás es opcional.',
+    lname:'Nombre de la mascota *',lemo:'Icono <small>(cualquier emoji)</small>',lbreed:'Raza · edad',lphone:'Tu teléfono <small>(opcional)</small>',
+    lwa:'WhatsApp <small>(opcional)</small>',ltg:'Telegram <small>(opcional)</small>',linfo:'Info de la mascota <small>(opcional)</small>',
+    req:'Introduce el nombre y al menos un contacto',btn:'Crear mi código QR',ready:'✅ ¡Tu código QR está listo!',
     steps:'📌 <b>Qué hacer ahora:</b><br>1️⃣ <b>Mantén pulsado el QR</b> → "Guardar imagen"<br>2️⃣ Envía el QR guardado <b>al vendedor por el chat de Ozon</b><br>3️⃣ ¡Listo! Grabaremos la placa y enviaremos tu pedido',
     info_def:'Color|\nVacunas|✓ al día\nCarácter|amistoso',ph_name:'Rex',ph_breed:'Pastor · 5 años'},
-fr:{n:'Français',title:'🐾 Profil de votre animal',sub:'Remplissez le formulaire — nous créerons un QR code personnel pour la médaille.<br>Les données sont traitées uniquement sur votre téléphone et ne sont envoyées nulle part.',
-    lname:'Nom de l’animal *',lemo:'Icône <small>(emoji au choix)</small>',lbreed:'Race · âge',lphone:'Votre téléphone * <small>(gravé sur la médaille)</small>',
-    lwa:'WhatsApp <small>(si disponible)</small>',ltg:'Telegram <small>(pseudo sans @)</small>',linfo:'Infos sur l’animal <small>(chaque ligne : libellé | valeur)</small>',
-    btn:'Créer mon QR code',ready:'✅ Votre QR code est prêt !',engrave:'Sera gravé sur la médaille :<br><b id="egr"></b>',
+fr:{n:'Français',title:'🐾 Profil de votre animal',sub:'Remplissez le formulaire — nous créerons un QR code personnel pour la médaille.<br>Les données sont traitées uniquement sur votre téléphone et ne sont envoyées nulle part.<br>⭐ Seul le nom est obligatoire — le reste est facultatif.',
+    lname:'Nom de l’animal *',lemo:'Icône <small>(emoji au choix)</small>',lbreed:'Race · âge',lphone:'Votre téléphone <small>(facultatif)</small>',
+    lwa:'WhatsApp <small>(facultatif)</small>',ltg:'Telegram <small>(facultatif)</small>',linfo:'Infos sur l’animal <small>(facultatif)</small>',
+    req:'Entrez le nom et au moins un contact',btn:'Créer mon QR code',ready:'✅ Votre QR code est prêt !',
     steps:'📌 <b>Et ensuite :</b><br>1️⃣ <b>Appuyez longuement sur le QR</b> → « Enregistrer l’image »<br>2️⃣ Envoyez le QR enregistré <b>au vendeur via le chat Ozon</b><br>3️⃣ C’est bon ! Nous gravons la médaille et expédions votre commande',
     info_def:'Robe|\nVaccins|✓ à jour\nCaractère|amical',ph_name:'Rex',ph_breed:'Berger · 5 ans'},
-it:{n:'Italiano',title:'🐾 Profilo del tuo animale',sub:'Compila il modulo: creeremo un codice QR personale per la medaglietta.<br>I dati vengono elaborati solo sul tuo telefono e non inviati da nessuna parte.',
-    lname:'Nome dell’animale *',lemo:'Icona <small>(qualsiasi emoji)</small>',lbreed:'Razza · età',lphone:'Il tuo telefono * <small>(inciso sulla medaglietta)</small>',
-    lwa:'WhatsApp <small>(se ce l’hai)</small>',ltg:'Telegram <small>(username senza @)</small>',linfo:'Info sull’animale <small>(ogni riga: etichetta | valore)</small>',
-    btn:'Crea il mio QR code',ready:'✅ Il tuo QR code è pronto!',engrave:'Sarà inciso sulla medaglietta:<br><b id="egr"></b>',
+it:{n:'Italiano',title:'🐾 Profilo del tuo animale',sub:'Compila il modulo: creeremo un codice QR personale per la medaglietta.<br>I dati vengono elaborati solo sul tuo telefono e non inviati da nessuna parte.<br>⭐ Solo il nome è obbligatorio — tutto il resto è facoltativo.',
+    lname:'Nome dell’animale *',lemo:'Icona <small>(qualsiasi emoji)</small>',lbreed:'Razza · età',lphone:'Il tuo telefono <small>(facoltativo)</small>',
+    lwa:'WhatsApp <small>(facoltativo)</small>',ltg:'Telegram <small>(facoltativo)</small>',linfo:'Info sull’animale <small>(facoltativo)</small>',
+    req:'Inserisci il nome e almeno un contatto',btn:'Crea il mio QR code',ready:'✅ Il tuo QR code è pronto!',
     steps:'📌 <b>Cosa fare ora:</b><br>1️⃣ <b>Tieni premuto il QR</b> → "Salva immagine"<br>2️⃣ Invia il QR salvato <b>al venditore nella chat Ozon</b><br>3️⃣ Fatto! Incidiamo la medaglietta e spediamo il tuo ordine',
     info_def:'Manto|\nVaccini|✓ in regola\nCarattere|amichevole',ph_name:'Rex',ph_breed:'Pastore · 5 anni'},
-pt:{n:'Português',title:'🐾 Perfil do seu animal',sub:'Preencha o formulário — criaremos um código QR personalizado para a placa.<br>Os dados são processados apenas no seu telefone e não são enviados para lado nenhum.',
-    lname:'Nome do animal *',lemo:'Ícone <small>(qualquer emoji)</small>',lbreed:'Raça · idade',lphone:'O seu telefone * <small>(gravado na placa)</small>',
-    lwa:'WhatsApp <small>(se tiver)</small>',ltg:'Telegram <small>(utilizador sem @)</small>',linfo:'Info do animal <small>(cada linha: etiqueta | valor)</small>',
-    btn:'Criar o meu código QR',ready:'✅ O seu código QR está pronto!',engrave:'Será gravado na placa:<br><b id="egr"></b>',
+pt:{n:'Português',title:'🐾 Perfil do seu animal',sub:'Preencha o formulário — criaremos um código QR personalizado para a placa.<br>Os dados são processados apenas no seu telefone e não são enviados para lado nenhum.<br>⭐ Apenas o nome é obrigatório — todo o resto é opcional.',
+    lname:'Nome do animal *',lemo:'Ícone <small>(qualquer emoji)</small>',lbreed:'Raça · idade',lphone:'O seu telefone <small>(opcional)</small>',
+    lwa:'WhatsApp <small>(opcional)</small>',ltg:'Telegram <small>(opcional)</small>',linfo:'Info do animal <small>(opcional)</small>',
+    req:'Insira o nome e pelo menos um contacto',btn:'Criar o meu código QR',ready:'✅ O seu código QR está pronto!',
     steps:'📌 <b>O que fazer a seguir:</b><br>1️⃣ <b>Prima longamente o QR</b> → "Guardar imagem"<br>2️⃣ Envie o QR guardado <b>ao vendedor no chat da Ozon</b><br>3️⃣ Pronto! Gravamos a placa e enviamos a sua encomenda',
     info_def:'Cor|\nVacinas|✓ em dia\nCaráter|amigável',ph_name:'Rex',ph_breed:'Pastor · 5 anos'},
-pl:{n:'Polski',title:'🐾 Profil Twojego zwierzaka',sub:'Wypełnij formularz — utworzymy spersonalizowany kod QR dla adresówki.<br>Dane są przetwarzane tylko na Twoim telefonie i nigdzie nie są wysyłane.',
-    lname:'Imię zwierzaka *',lemo:'Ikona <small>(dowolny emoji)</small>',lbreed:'Rasa · wiek',lphone:'Twój telefon * <small>(wygrawerowany na adresówce)</small>',
-    lwa:'WhatsApp <small>(jeśli masz)</small>',ltg:'Telegram <small>(nick bez @)</small>',linfo:'Info o zwierzaku <small>(każda linia: nazwa | wartość)</small>',
-    btn:'Utwórz mój kod QR',ready:'✅ Twój kod QR jest gotowy!',engrave:'Zostanie wygrawerowane na adresówce:<br><b id="egr"></b>',
+pl:{n:'Polski',title:'🐾 Profil Twojego zwierzaka',sub:'Wypełnij formularz — utworzymy spersonalizowany kod QR dla adresówki.<br>Dane są przetwarzane tylko na Twoim telefonie i nigdzie nie są wysyłane.<br>⭐ Tylko imię jest wymagane — reszta jest opcjonalna.',
+    lname:'Imię zwierzaka *',lemo:'Ikona <small>(dowolny emoji)</small>',lbreed:'Rasa · wiek',lphone:'Twój telefon <small>(opcjonalnie)</small>',
+    lwa:'WhatsApp <small>(opcjonalnie)</small>',ltg:'Telegram <small>(opcjonalnie)</small>',linfo:'Info o zwierzaku <small>(opcjonalnie)</small>',
+    req:'Podaj imię i co najmniej jeden kontakt',btn:'Utwórz mój kod QR',ready:'✅ Twój kod QR jest gotowy!',
     steps:'📌 <b>Co dalej:</b><br>1️⃣ <b>Przytrzymaj kod QR</b> → „Zapisz obraz"<br>2️⃣ Wyślij zapisany kod QR <b>sprzedawcy na czacie Ozon</b><br>3️⃣ Gotowe! Grawerujemy adresówkę i wysyłamy zamówienie',
     info_def:'Umaszczenie|\nSzczepienia|✓ aktualne\nCharakter|przyjazny',ph_name:'Rex',ph_breed:'Owczarek · 5 lat'},
-uk:{n:'Українська',title:'🐾 Профіль вашої тварини',sub:'Заповніть форму — ми створимо персональний QR-код для адресника.<br>Дані обробляються лише на вашому телефоні й нікуди не надсилаються.',
-    lname:'Кличка тварини *',lemo:'Іконка <small>(будь-який емодзі)</small>',lbreed:'Порода · вік',lphone:'Ваш телефон * <small>(буде вигравіруваний на адреснику)</small>',
-    lwa:'WhatsApp <small>(якщо є)</small>',ltg:'Telegram <small>(нік без @)</small>',linfo:'Інформація про тварину <small>(кожен рядок: назва | значення)</small>',
-    btn:'Створити мій QR-код',ready:'✅ Ваш QR-код готовий!',engrave:'Буде вигравірувано на адреснику:<br><b id="egr"></b>',
+uk:{n:'Українська',title:'🐾 Профіль вашої тварини',sub:'Заповніть форму — ми створимо персональний QR-код для адресника.<br>Дані обробляються лише на вашому телефоні й нікуди не надсилаються.<br>⭐ Лише кличка обов’язкова — решта за бажанням.',
+    lname:'Кличка тварини *',lemo:'Іконка <small>(будь-який емодзі)</small>',lbreed:'Порода · вік',lphone:'Ваш телефон <small>(необов’язково)</small>',
+    lwa:'WhatsApp <small>(необов’язково)</small>',ltg:'Telegram <small>(необов’язково)</small>',linfo:'Інформація про тварину <small>(необов’язково)</small>',
+    req:'Вкажіть кличку та хоча б один контакт',btn:'Створити мій QR-код',ready:'✅ Ваш QR-код готовий!',
     steps:'📌 <b>Що далі:</b><br>1️⃣ <b>Затисніть QR-код</b> → «Зберегти зображення»<br>2️⃣ Надішліть збережений QR-код <b>продавцю в чат Ozon</b><br>3️⃣ Готово! Ми вигравіюємо адресник і відправимо замовлення',
     info_def:'Масть|\nЩеплення|✓ актуальні\nХарактер|дружній',ph_name:'Рекс',ph_breed:'Вівчарка · 5 років'},
-ja:{n:'日本語',title:'🐾 ペットのプロフィール',sub:'フォームに記入すると、ペット用タグのQRコードを作成します。<br>データはお使いの端末内のみで処理され、どこにも送信されません。',
-    lname:'ペットの名前 *',lemo:'アイコン <small>(任意の絵文字)</small>',lbreed:'品種 · 年齢',lphone:'電話番号 * <small>(タグに刻印されます)</small>',
-    lwa:'WhatsApp <small>(あれば)</small>',ltg:'Telegram <small>(@なしのユーザー名)</small>',linfo:'ペット情報 <small>(1行ごと：項目 | 内容)</small>',
-    btn:'QRコードを作成',ready:'✅ QRコードのできあがり！',engrave:'タグに刻印されます：<br><b id="egr"></b>',
+ja:{n:'日本語',title:'🐾 ペットのプロフィール',sub:'フォームに記入すると、ペット用タグのQRコードを作成します。<br>データはお使いの端末内のみで処理され、どこにも送信されません。<br>⭐ 名前のみ必須です——それ以外は任意です。',
+    lname:'ペットの名前 *',lemo:'アイコン <small>(任意の絵文字)</small>',lbreed:'品種 · 年齢',lphone:'電話番号 <small>(任意)</small>',
+    lwa:'WhatsApp <small>(任意)</small>',ltg:'Telegram <small>(任意)</small>',linfo:'ペット情報 <small>(任意)</small>',
+    req:'名前と連絡先（いずれか1つ）を入力してください',btn:'QRコードを作成',ready:'✅ QRコードのできあがり！',
     steps:'📌 <b>次のステップ：</b><br>1️⃣ <b>QRコードを長押し</b> →「画像を保存」<br>2️⃣ 保存したQRコードを<b>Ozonチャットで販売者に送ってください</b><br>3️⃣ 完了！タグを刻印して発送します',
     info_def:'毛色|\nワクチン|✓ 接種済み\n性格|おとなしい',ph_name:'レックス',ph_breed:'シェパード · 5歳'}
 };
@@ -149,7 +146,6 @@ function applyLang(){
   const map={t_title:t.title,t_sub:t.sub,t_lname:t.lname,t_lemo:t.lemo,t_lbreed:t.lbreed,t_lphone:t.lphone,
     t_lwa:t.lwa,t_ltg:t.ltg,t_linfo:t.linfo,t_btn:t.btn,t_ready:t.ready,t_steps:t.steps};
   for(const id in map)document.getElementById(id).innerHTML=map[id];
-  document.getElementById('t_engrave').innerHTML=t.engrave;
   document.getElementById('n').placeholder=t.ph_name;
   document.getElementById('b').placeholder=t.ph_breed;
   if(!document.getElementById('i').value||document.getElementById('i').dataset.def==='1'){document.getElementById('i').value=t.info_def;document.getElementById('i').dataset.def='1'}
@@ -161,7 +157,7 @@ function b64e(s){const b=new TextEncoder().encode(s);let r='';b.forEach(x=>r+=St
   return btoa(r).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
 function gen(){
   const v=id=>document.getElementById(id).value.trim();
-  if(!v('n')||!v('p')){alert(cur==='ru'?'Пожалуйста, заполните кличку и телефон':'Please fill in name and phone');return}
+  if(!v('n')||(!v('p')&&!v('w')&&!v('tg'))){alert(L[cur].req);return}
   const items=v('i').split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]&&a[1]);
   const d={n:v('n'),b:v('b'),p:v('p'),t:'',e:v('e')||'🐾',i:items};
   if(v('w'))d.w=v('w');
@@ -170,8 +166,7 @@ function gen(){
   const url=base+'#'+b64e(JSON.stringify(d));
   document.getElementById('url').textContent=url;
   document.getElementById('qr').src='https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=8&data='+encodeURIComponent(url);
-  document.getElementById('egr').textContent=d.n+' + '+d.p+' + QR';
-  document.getElementById('out').style.display='block';
+    document.getElementById('out').style.display='block';
   document.getElementById('out').scrollIntoView({behavior:'smooth'});
 }
 </script>
