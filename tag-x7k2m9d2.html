@@ -28,6 +28,9 @@ body{background:#f3f4f6;max-width:480px;margin:0 auto;min-height:100vh}
 <body>
 <div id="app"></div>
 <script>
+/* ★ 安全存储：内置浏览器禁用localStorage时也不报错 ★ */
+function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function read(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function dec(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';
   const bin=atob(s),b=new Uint8Array(bin.length);
   for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);
@@ -81,14 +84,14 @@ ja:{n:'日本語',call:'📞 飼い主に連絡',wa:'💬 WhatsAppで送信',tg:
     foot:'❤をこめて · ',shop:'ストアへ',err:'⚠️ ページが見つかりません。'}
 };
 const LANGS=Object.keys(L);
-let cur=localStorage.getItem('plang');
+let cur=read('plang');
 if(!cur||LANGS.indexOf(cur)<0){cur=(navigator.language||'ru').slice(0,2).toLowerCase();if(LANGS.indexOf(cur)<0)cur='ru'}
 
 let d=null;try{d=JSON.parse(dec(location.hash.slice(1)))}catch(e){}
 const app=document.getElementById('app');
 const T=()=>L[cur];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function setLang(v){cur=v;try{localStorage.setItem('plang',v)}catch(e){};render()}
+function setLang(v){cur=v;try{store('plang',v)}catch(e){};render()}
 
 function render(){
   const t=T();
