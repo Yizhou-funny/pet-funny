@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Profile — QR Tag</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Roboto,sans-serif}
+body{background:#f3f4f6;min-height:100vh;padding:20px 14px}
+.langfix{position:fixed;top:10px;right:10px;z-index:9;background:rgba(255,255,255,.95);border:1px solid #e5e7eb;border-radius:10px;padding:5px 8px;font-size:13px;color:#1f2937;cursor:pointer;font-weight:600;max-width:150px}
+.box{max-width:560px;margin:36px auto 0}
+h1{font-size:21px;color:#111827;margin-bottom:4px}
+.sub{font-size:13.5px;color:#6b7280;margin-bottom:16px;line-height:1.6}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin-bottom:14px}
+label{display:block;font-size:13.5px;color:#374151;margin:13px 0 5px;font-weight:600}
+label small{color:#9ca3af;font-weight:400}
+input,textarea,select{width:100%;padding:10px 12px;border:1.5px solid #d1d5db;border-radius:10px;font-size:15px;background:#fff;font-family:inherit}
+input:focus,textarea:focus{border-color:#2563eb;outline:none}
+textarea{resize:vertical;min-height:56px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:16.5px;font-weight:700;cursor:pointer;background:#2563eb;color:#fff;margin-top:18px;font-family:inherit}
+.btn:active{background:#1d4ed8}
+.out{display:none}
+.qrwrap{display:flex;gap:18px;align-items:center;margin-top:8px}
+.qr{width:180px;height:180px;flex:none;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
+.info{font-size:13.5px;color:#6b7280;line-height:2}
+.info b{color:#111827}
+.urlbox{background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:8px 10px;font-size:11px;word-break:break-all;color:#6b7280;margin-top:12px;max-height:64px;overflow:auto}
+.stepbox{background:#dbeafe;border-radius:12px;padding:13px;font-size:14px;color:#1e40af;line-height:1.9;margin-top:14px}
+.stepbox b{color:#1d4ed8}
+@media(max-width:480px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<select class="langfix" id="langsel"></select>
+<div class="box">
+<div style="text-align:center;margin-bottom:4px"><img src="data:image/png;base64,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" style="height:44px;vertical-align:middle" alt="Funny Home"></div>
+<h1 id="t_title" style="text-align:center"></h1>
+<div class="sub" id="t_sub" style="text-align:center"></div>
+
+<div class="card">
+  <div class="row">
+    <div><label id="t_lname"></label><input id="n" placeholder="Рекс"></div>
+    <div><label id="t_lemo"></label><input id="e" list="emojis" maxlength="4" value="🐾" style="font-size:20px">
+      <datalist id="emojis"><option>🐕</option><option>🐈</option><option>🐇</option><option>🦜</option><option>🐹</option><option>🐢</option><option>🐠</option><option>🐍</option><option>🦔</option><option>🐴</option><option>🐾</option><option>❤️</option></datalist></div>
+  </div>
+  <div class="row">
+    <div><label id="t_lbreed"></label><input id="b" placeholder="Овчарка · 5 лет"></div>
+    <div><label id="t_lphone"></label><input id="p" placeholder="+79990000000"></div>
+  </div>
+  <div class="row">
+    <div><label id="t_lwa"></label><input id="w" placeholder="79990000000"></div>
+    <div><label id="t_ltg"></label><input id="tg" placeholder="username"></div>
+  </div>
+  <label id="t_linfo"></label>
+  <textarea id="i"></textarea>
+  <button class="btn" id="t_btn" onclick="gen()"></button>
+</div>
+
+<div class="card out" id="out">
+  <b style="font-size:16px" id="t_ready"></b>
+  <div style="text-align:center"><img class="qr" id="qr" alt="QR" style="margin:0 auto"></div>
+  <div class="stepbox" id="t_steps"></div>
+  <div class="urlbox" id="url"></div>
+</div>
+
+<div style="text-align:center;font-size:12px;color:#9ca3af;margin-top:8px">Funny Home · QR Pet Tag</div>
+</div>
+
+<script>
+/* ===== 11 语言 ===== */
+const L={
+ru:{n:'Русский',title:'🐾 Профиль вашего питомца',sub:'Заполните форму — мы создадим персональный QR-код для адресника.<br>Данные обрабатываются только на вашем телефоне и никуда не отправляются.<br>⭐ Только кличка обязательна — остальное по желанию.',
+    lname:'Кличка питомца *',lemo:'Иконка <small>(эмодзи, любое)</small>',lbreed:'Порода · возраст',lphone:'Ваш телефон <small>(необязательно)</small>',
+    lwa:'WhatsApp <small>(необязательно)</small>',ltg:'Telegram <small>(необязательно)</small>',linfo:'Информация о питомце <small>(необязательно)</small>',
+    req:'Укажите кличку и хотя бы один контакт: телефон, WhatsApp или Telegram',btn:'Создать мой QR-код',ready:'✅ Ваш QR-код готов!',
+    steps:'📌 <b>Что делать дальше:</b><br>1️⃣ <b>Зажмите QR-код</b> → «Сохранить изображение»<br>2️⃣ Отправьте сохранённый QR-код <b>продавцу в чат Ozon</b><br>3️⃣ Готово! Мы выгравируем адресник и отправим заказ',
+    info_def:'Окрас|\nПрививки|✓ актуальны\nХарактер|дружелюбный',ph_name:'Рекс',ph_breed:'Овчарка · 5 лет'},
+en:{n:'English',title:'🐾 Your Pet Profile',sub:'Fill in the form — we will create a personal QR code for the tag.<br>Data is processed only on your phone and never sent anywhere.<br>⭐ Only the pet name is required — everything else is optional.',
+    lname:'Pet name *',lemo:'Icon <small>(any emoji)</small>',lbreed:'Breed · age',lphone:'Your phone <small>(optional)</small>',
+    lwa:'WhatsApp <small>(optional)</small>',ltg:'Telegram <small>(optional)</small>',linfo:'Pet info <small>(optional)</small>',
+    req:'Please enter the pet name and at least one contact: phone, WhatsApp or Telegram',btn:'Create my QR code',ready:'✅ Your QR code is ready!',
+    steps:'📌 <b>What to do next:</b><br>1️⃣ <b>Long-press the QR code</b> → "Save image"<br>2️⃣ Send the saved QR code <b>to the seller in Ozon chat</b><br>3️⃣ Done! We will engrave the tag and ship your order',
+    info_def:'Color|\nVaccines|✓ up to date\nTemperament|friendly',ph_name:'Rex',ph_breed:'Shepherd · 5 years'},
+zh:{n:'中文',title:'🐾 您的宠物档案',sub:'填写表单——我们将为您的宠物牌生成专属二维码。<br>数据只在您的手机上处理，不会发送到任何地方。<br>⭐ 只需填写宠物名字，其他均为选填。',
+    lname:'宠物名字 *',lemo:'图标 <small>(任意 emoji)</small>',lbreed:'品种 · 年龄',lphone:'您的电话 <small>(选填)</small>',
+    lwa:'WhatsApp <small>(可填)</small>',ltg:'Telegram <small>(可填)</small>',linfo:'宠物信息 <small>(可填)</small>',
+    req:'请填写宠物名字，并至少留一种联系方式（电话 / WhatsApp / Telegram）',btn:'生成我的二维码',ready:'✅ 您的二维码已生成！',
+    steps:'📌 <b>接下来：</b><br>1️⃣ <b>长按二维码</b> → "保存图片"<br>2️⃣ 把保存的二维码<b>通过 Ozon 聊天发给卖家</b><br>3️⃣ 完成！我们会刻好牌子并发出',
+    info_def:'毛色|\n疫苗|✓ 已接种\n性格|温顺',ph_name:'Rex',ph_breed:'牧羊犬 · 5岁'},
+de:{n:'Deutsch',title:'🐾 Profil Ihres Haustiers',sub:'Füllen Sie das Formular aus – wir erstellen einen persönlichen QR-Code für das Halsband.<br>Die Daten werden nur auf Ihrem Telefon verarbeitet und nirgendwohin gesendet.<br>⭐ Nur der Name ist Pflicht — alles andere ist freiwillig.',
+    lname:'Name des Haustiers *',lemo:'Symbol <small>(beliebiges Emoji)</small>',lbreed:'Rasse · Alter',lphone:'Ihre Telefonnummer <small>(optional)</small>',
+    lwa:'WhatsApp <small>(optional)</small>',ltg:'Telegram <small>(optional)</small>',linfo:'Infos zum Haustier <small>(optional)</small>',
+    req:'Bitte Name und mindestens eine Kontaktmöglichkeit angeben',btn:'Meinen QR-Code erstellen',ready:'✅ Ihr QR-Code ist fertig!',
+    steps:'📌 <b>Nächste Schritte:</b><br>1️⃣ <b>QR-Code gedrückt halten</b> → „Bild speichern"<br>2️⃣ Den gespeicherten QR-Code <b>dem Verkäufer im Ozon-Chat senden</b><br>3️⃣ Fertig! Wir gravieren das Tag und versenden Ihre Bestellung',
+    info_def:'Fellfarbe|\nImpfungen|✓ aktuell\nCharakter|freundlich',ph_name:'Rex',ph_breed:'Schäferhund · 5 Jahre'},
+es:{n:'Español',title:'🐾 Perfil de tu mascota',sub:'Rellena el formulario: crearemos un código QR personalizado para la placa.<br>Los datos se procesan solo en tu teléfono y no se envían a ningún sitio.<br>⭐ Solo el nombre es obligatorio — todo lo demás es opcional.',
+    lname:'Nombre de la mascota *',lemo:'Icono <small>(cualquier emoji)</small>',lbreed:'Raza · edad',lphone:'Tu teléfono <small>(opcional)</small>',
+    lwa:'WhatsApp <small>(opcional)</small>',ltg:'Telegram <small>(opcional)</small>',linfo:'Info de la mascota <small>(opcional)</small>',
+    req:'Introduce el nombre y al menos un contacto',btn:'Crear mi código QR',ready:'✅ ¡Tu código QR está listo!',
+    steps:'📌 <b>Qué hacer ahora:</b><br>1️⃣ <b>Mantén pulsado el QR</b> → "Guardar imagen"<br>2️⃣ Envía el QR guardado <b>al vendedor por el chat de Ozon</b><br>3️⃣ ¡Listo! Grabaremos la placa y enviaremos tu pedido',
+    info_def:'Color|\nVacunas|✓ al día\nCarácter|amistoso',ph_name:'Rex',ph_breed:'Pastor · 5 años'},
+fr:{n:'Français',title:'🐾 Profil de votre animal',sub:'Remplissez le formulaire — nous créerons un QR code personnel pour la médaille.<br>Les données sont traitées uniquement sur votre téléphone et ne sont envoyées nulle part.<br>⭐ Seul le nom est obligatoire — le reste est facultatif.',
+    lname:'Nom de l’animal *',lemo:'Icône <small>(emoji au choix)</small>',lbreed:'Race · âge',lphone:'Votre téléphone <small>(facultatif)</small>',
+    lwa:'WhatsApp <small>(facultatif)</small>',ltg:'Telegram <small>(facultatif)</small>',linfo:'Infos sur l’animal <small>(facultatif)</small>',
+    req:'Entrez le nom et au moins un contact',btn:'Créer mon QR code',ready:'✅ Votre QR code est prêt !',
+    steps:'📌 <b>Et ensuite :</b><br>1️⃣ <b>Appuyez longuement sur le QR</b> → « Enregistrer l’image »<br>2️⃣ Envoyez le QR enregistré <b>au vendeur via le chat Ozon</b><br>3️⃣ C’est bon ! Nous gravons la médaille et expédions votre commande',
+    info_def:'Robe|\nVaccins|✓ à jour\nCaractère|amical',ph_name:'Rex',ph_breed:'Berger · 5 ans'},
+it:{n:'Italiano',title:'🐾 Profilo del tuo animale',sub:'Compila il modulo: creeremo un codice QR personale per la medaglietta.<br>I dati vengono elaborati solo sul tuo telefono e non inviati da nessuna parte.<br>⭐ Solo il nome è obbligatorio — tutto il resto è facoltativo.',
+    lname:'Nome dell’animale *',lemo:'Icona <small>(qualsiasi emoji)</small>',lbreed:'Razza · età',lphone:'Il tuo telefono <small>(facoltativo)</small>',
+    lwa:'WhatsApp <small>(facoltativo)</small>',ltg:'Telegram <small>(facoltativo)</small>',linfo:'Info sull’animale <small>(facoltativo)</small>',
+    req:'Inserisci il nome e almeno un contatto',btn:'Crea il mio QR code',ready:'✅ Il tuo QR code è pronto!',
+    steps:'📌 <b>Cosa fare ora:</b><br>1️⃣ <b>Tieni premuto il QR</b> → "Salva immagine"<br>2️⃣ Invia il QR salvato <b>al venditore nella chat Ozon</b><br>3️⃣ Fatto! Incidiamo la medaglietta e spediamo il tuo ordine',
+    info_def:'Manto|\nVaccini|✓ in regola\nCarattere|amichevole',ph_name:'Rex',ph_breed:'Pastore · 5 anni'},
+pt:{n:'Português',title:'🐾 Perfil do seu animal',sub:'Preencha o formulário — criaremos um código QR personalizado para a placa.<br>Os dados são processados apenas no seu telefone e não são enviados para lado nenhum.<br>⭐ Apenas o nome é obrigatório — todo o resto é opcional.',
+    lname:'Nome do animal *',lemo:'Ícone <small>(qualquer emoji)</small>',lbreed:'Raça · idade',lphone:'O seu telefone <small>(opcional)</small>',
+    lwa:'WhatsApp <small>(opcional)</small>',ltg:'Telegram <small>(opcional)</small>',linfo:'Info do animal <small>(opcional)</small>',
+    req:'Insira o nome e pelo menos um contacto',btn:'Criar o meu código QR',ready:'✅ O seu código QR está pronto!',
+    steps:'📌 <b>O que fazer a seguir:</b><br>1️⃣ <b>Prima longamente o QR</b> → "Guardar imagem"<br>2️⃣ Envie o QR guardado <b>ao vendedor no chat da Ozon</b><br>3️⃣ Pronto! Gravamos a placa e enviamos a sua encomenda',
+    info_def:'Cor|\nVacinas|✓ em dia\nCaráter|amigável',ph_name:'Rex',ph_breed:'Pastor · 5 anos'},
+pl:{n:'Polski',title:'🐾 Profil Twojego zwierzaka',sub:'Wypełnij formularz — utworzymy spersonalizowany kod QR dla adresówki.<br>Dane są przetwarzane tylko na Twoim telefonie i nigdzie nie są wysyłane.<br>⭐ Tylko imię jest wymagane — reszta jest opcjonalna.',
+    lname:'Imię zwierzaka *',lemo:'Ikona <small>(dowolny emoji)</small>',lbreed:'Rasa · wiek',lphone:'Twój telefon <small>(opcjonalnie)</small>',
+    lwa:'WhatsApp <small>(opcjonalnie)</small>',ltg:'Telegram <small>(opcjonalnie)</small>',linfo:'Info o zwierzaku <small>(opcjonalnie)</small>',
+    req:'Podaj imię i co najmniej jeden kontakt',btn:'Utwórz mój kod QR',ready:'✅ Twój kod QR jest gotowy!',
+    steps:'📌 <b>Co dalej:</b><br>1️⃣ <b>Przytrzymaj kod QR</b> → „Zapisz obraz"<br>2️⃣ Wyślij zapisany kod QR <b>sprzedawcy na czacie Ozon</b><br>3️⃣ Gotowe! Grawerujemy adresówkę i wysyłamy zamówienie',
+    info_def:'Umaszczenie|\nSzczepienia|✓ aktualne\nCharakter|przyjazny',ph_name:'Rex',ph_breed:'Owczarek · 5 lat'},
+uk:{n:'Українська',title:'🐾 Профіль вашої тварини',sub:'Заповніть форму — ми створимо персональний QR-код для адресника.<br>Дані обробляються лише на вашому телефоні й нікуди не надсилаються.<br>⭐ Лише кличка обов’язкова — решта за бажанням.',
+    lname:'Кличка тварини *',lemo:'Іконка <small>(будь-який емодзі)</small>',lbreed:'Порода · вік',lphone:'Ваш телефон <small>(необов’язково)</small>',
+    lwa:'WhatsApp <small>(необов’язково)</small>',ltg:'Telegram <small>(необов’язково)</small>',linfo:'Інформація про тварину <small>(необов’язково)</small>',
+    req:'Вкажіть кличку та хоча б один контакт',btn:'Створити мій QR-код',ready:'✅ Ваш QR-код готовий!',
+    steps:'📌 <b>Що далі:</b><br>1️⃣ <b>Затисніть QR-код</b> → «Зберегти зображення»<br>2️⃣ Надішліть збережений QR-код <b>продавцю в чат Ozon</b><br>3️⃣ Готово! Ми вигравіюємо адресник і відправимо замовлення',
+    info_def:'Масть|\nЩеплення|✓ актуальні\nХарактер|дружній',ph_name:'Рекс',ph_breed:'Вівчарка · 5 років'},
+ja:{n:'日本語',title:'🐾 ペットのプロフィール',sub:'フォームに記入すると、ペット用タグのQRコードを作成します。<br>データはお使いの端末内のみで処理され、どこにも送信されません。<br>⭐ 名前のみ必須です——それ以外は任意です。',
+    lname:'ペットの名前 *',lemo:'アイコン <small>(任意の絵文字)</small>',lbreed:'品種 · 年齢',lphone:'電話番号 <small>(任意)</small>',
+    lwa:'WhatsApp <small>(任意)</small>',ltg:'Telegram <small>(任意)</small>',linfo:'ペット情報 <small>(任意)</small>',
+    req:'名前と連絡先（いずれか1つ）を入力してください',btn:'QRコードを作成',ready:'✅ QRコードのできあがり！',
+    steps:'📌 <b>次のステップ：</b><br>1️⃣ <b>QRコードを長押し</b> →「画像を保存」<br>2️⃣ 保存したQRコードを<b>Ozonチャットで販売者に送ってください</b><br>3️⃣ 完了！タグを刻印して発送します',
+    info_def:'毛色|\nワクチン|✓ 接種済み\n性格|おとなしい',ph_name:'レックス',ph_breed:'シェパード · 5歳'}
+};
+const LANGS=Object.keys(L);
+let cur=localStorage.getItem('olang');
+if(!cur||LANGS.indexOf(cur)<0){cur=(navigator.language||'ru').slice(0,2).toLowerCase();if(LANGS.indexOf(cur)<0)cur='ru'}
+
+function applyLang(){
+  const t=L[cur];
+  document.getElementById('langsel').innerHTML=LANGS.map(k=>'<option value="'+k+'"'+(k===cur?' selected':'')+'>'+L[k].n+'</option>').join('');
+  const map={t_title:t.title,t_sub:t.sub,t_lname:t.lname,t_lemo:t.lemo,t_lbreed:t.lbreed,t_lphone:t.lphone,
+    t_lwa:t.lwa,t_ltg:t.ltg,t_linfo:t.linfo,t_btn:t.btn,t_ready:t.ready,t_steps:t.steps};
+  for(const id in map)document.getElementById(id).innerHTML=map[id];
+  document.getElementById('n').placeholder=t.ph_name;
+  document.getElementById('b').placeholder=t.ph_breed;
+  if(!document.getElementById('i').value||document.getElementById('i').dataset.def==='1'){document.getElementById('i').value=t.info_def;document.getElementById('i').dataset.def='1'}
+}
+document.getElementById('langsel').addEventListener('change',function(){cur=this.value;try{localStorage.setItem('olang',cur)}catch(e){};applyLang()});
+applyLang();
+
+function b64e(s){const b=new TextEncoder().encode(s);let r='';b.forEach(x=>r+=String.fromCharCode(x));
+  return btoa(r).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function gen(){
+  const v=id=>document.getElementById(id).value.trim();
+  if(!v('n')||(!v('p')&&!v('w')&&!v('tg'))){alert(L[cur].req);return}
+  const items=v('i').split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(a=>a[0]&&a[1]);
+  const d={n:v('n'),b:v('b'),p:v('p'),t:'',e:v('e')||'🐾',i:items};
+  if(v('w'))d.w=v('w');
+  if(v('tg'))d.tg=v('tg').replace(/^@/,'');
+  const base=location.href.replace(/[^/]*$/,'tag-x7k2m9d2.html');
+  const url=base+'#'+b64e(JSON.stringify(d));
+  document.getElementById('url').textContent=url;
+  document.getElementById('qr').src='https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=8&data='+encodeURIComponent(url);
+    document.getElementById('out').style.display='block';
+  document.getElementById('out').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
